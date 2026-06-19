@@ -1,6 +1,9 @@
 - name: configure backend server
   hosts: backend
   become: yes
+  vars:
+    mysql_root_password: ExpenseApp@1
+    login_host: mysql.daws81.online
 
   tasks:
   - name: disable default nodejs
@@ -34,5 +37,26 @@
       src: /tmp/backend.zip # bydeafult ansible server thinks this is in ansible so I have to move src.
       dest: /app
       remote_src: yes # when we can use the remote_src it is telling already exists in remote server.
+
+  - name: install the dependencies
+    ansible.builtin.command: npm install
+    args:
+      chdir: /app
+  
+  - name: copy backend service
+    ansible.builtin.copy:
+      src: backend.service
+      dest: /etc/systemd/system/backend.service
+  
+  - name: import mysql data
+    community.mysql.mysql_db:
+      login_user: root
+      login_password: "{{ mysql_root_password }}"
+      login_host: "{{ login_host }}"
+      target: /app/schema/backend.sql
+      name: all 
+      state: dump
+
+
 
 
