@@ -31,7 +31,8 @@
   
   - name: extract the code
     ansible.builtin.unarchive:
-      src: /tmp/backend.zip
+      src: /tmp/backend.zip # bydeafult ansible server thinks this is in ansible so I have to move src.
       dest: /app
+      remote_src: yes # when we can use the remote_src it is telling already exists in remote server.
 
 
