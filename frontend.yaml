@@ -21,7 +21,7 @@
   - name: create nginx html dictionary
     ansible.builtin.file:
       path: /usr/share/nginx/html
-      state: dictionary
+      state: directory
 
   - name: download frontend code
     ansible.builtin.get_url:
